@@ -31,3 +31,27 @@ export const getMovieDetailsApi = async movieId => {
     throw error;
   }
 };
+
+export const getCastApi = async movieId => {
+  try {
+    const response = await axios.get(
+      addApiKey(`movie/${movieId}/credits?language=en-US`)
+    );
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching cast:', error);
+    throw error;
+  }
+};
+
+export const getReviewsApi = async movieId => {
+  try {
+    const response = await axios.get(
+      addApiKey(`movie/${movieId}/reviews?language=en-US`)
+    );
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching cast:', error);
+    throw error;
+  }
+};

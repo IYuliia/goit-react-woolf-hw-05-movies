@@ -1,12 +1,20 @@
+import Cast from 'pages/Cast/Cast';
+import Reviews from 'pages/Reviews/Reviews';
 import React, { useCallback, useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import { getMovieDetailsApi } from '../../api/movies';
+import {
+  getCastApi,
+  getMovieDetailsApi,
+  getReviewsApi,
+} from '../../api/movies';
 
 const MovieDetails = () => {
   const { movieId } = useParams();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const [movie, setMovie] = useState(null);
+  const [cast, setCast] = useState([]);
+  const [reviews, setReviews] = useState([]);
 
   const getMovieDetails = useCallback(async () => {
     try {
@@ -14,12 +22,31 @@ const MovieDetails = () => {
       console.log('Movie ID:', movieId);
       setError('');
       const data = await getMovieDetailsApi(movieId);
+      console.log('Movie details:', data);
       setMovie(data);
     } catch (error) {
       console.log('Error fetching movie details:', error);
       setError('Error fetching movie details');
     } finally {
       setIsLoading(false);
+    }
+  }, [movieId]);
+
+  const getCast = useCallback(async () => {
+    try {
+      const castData = await getCastApi(movieId);
+      setCast(castData.cast);
+    } catch (error) {
+      console.error('Error fetching cast:', error);
+    }
+  }, [movieId]);
+
+  const getReviews = useCallback(async () => {
+    try {
+      const reviewsData = await getReviewsApi(movieId);
+      setReviews(reviewsData.results);
+    } catch (error) {
+      console.error('Error fetching reviews:', error);
     }
   }, [movieId]);
 
@@ -34,7 +61,10 @@ const MovieDetails = () => {
       {error && <p>{error}</p>}
       {movie && (
         <div>
-          <img src={movie.poster_path} alt={movie.title} />
+          <img
+            src={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`}
+            alt={movie.title}
+          />
           <h2>{movie.title}</h2>
           <p>Year: {movie.release_date}</p>
           <p>User Score: {movie.vote_average}</p>
@@ -43,12 +73,18 @@ const MovieDetails = () => {
           <h3>Additional Information</h3>
           <ul>
             <li>
-              <Link to={`/movies/${movieId}/cast`}>Cast</Link>
+              <Link to={`/movies/${movieId}/cast`} onClick={getCast}>
+                Cast
+              </Link>
             </li>
             <li>
-              <Link to={`/movies/${movieId}/reviews`}>Reviews</Link>
+              <Link to={`/movies/${movieId}/reviews`} onClick={getReviews}>
+                Reviews
+              </Link>
             </li>
           </ul>
+          {cast && <Cast cast={cast} />}
+          {reviews && <Reviews reviews={reviews} />}
         </div>
       )}
     </div>
