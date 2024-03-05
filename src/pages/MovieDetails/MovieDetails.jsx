@@ -15,6 +15,7 @@ const MovieDetails = () => {
   const [movie, setMovie] = useState(null);
   const [cast, setCast] = useState([]);
   const [reviews, setReviews] = useState([]);
+  const [showReviews, setShowReviews] = useState(false);
 
   const getMovieDetails = useCallback(async () => {
     try {
@@ -54,9 +55,14 @@ const MovieDetails = () => {
     getMovieDetails();
   }, [getMovieDetails]);
 
+  const handleGoBack = () => {
+    window.history.back();
+  };
+
   return (
     <div>
-      <Link to="/">Go Back</Link>
+      {/* //   <Link to="/">Go Back</Link> */}
+      <button onClick={handleGoBack}>Go Back</button>
       {isLoading && <p>Loading...</p>}
       {error && <p>{error}</p>}
       {movie && (
@@ -78,13 +84,22 @@ const MovieDetails = () => {
               </Link>
             </li>
             <li>
-              <Link to={`/movies/${movieId}/reviews`} onClick={getReviews}>
+              <Link
+                to={`/movies/${movieId}/reviews`}
+                onClick={() => {
+                  getReviews();
+                  setShowReviews(true);
+                }}
+              >
                 Reviews
               </Link>
             </li>
           </ul>
           {cast && <Cast cast={cast} />}
-          {reviews && <Reviews reviews={reviews} />}
+          {showReviews && reviews.length > 0 && <Reviews reviews={reviews} />}
+          {showReviews && reviews.length === 0 && (
+            <p>We don't have any reviews for this movie.</p>
+          )}
         </div>
       )}
     </div>

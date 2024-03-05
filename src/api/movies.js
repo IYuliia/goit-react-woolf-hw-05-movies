@@ -55,3 +55,15 @@ export const getReviewsApi = async movieId => {
     throw error;
   }
 };
+
+export const searchMoviesApi = async query => {
+  try {
+    const response = await axios.get(
+      addApiKey(`search/movie?query=${query}&language=en-US`)
+    );
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching movies:', error);
+    throw error;
+  }
+};
