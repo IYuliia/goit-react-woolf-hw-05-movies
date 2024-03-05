@@ -1,4 +1,4 @@
-import { Route, Routes } from 'react-router-dom';
+import { Navigate, Route, Routes } from 'react-router-dom';
 import { Suspense, lazy } from 'react';
 import MainLayout from './layouts/MainLayout/MainLayout';
 import Home from './pages/Home/Home';
@@ -41,6 +41,7 @@ export const App = () => {
             }
           />
         </Route>
+        <Route path="*" element={<Navigate to="/" />} />
       </Route>
     </Routes>
   );
