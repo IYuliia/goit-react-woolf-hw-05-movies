@@ -21,10 +21,8 @@ const MovieDetails = () => {
   const getMovieDetails = useCallback(async () => {
     try {
       setIsLoading(true);
-      console.log('Movie ID:', movieId);
       setError('');
       const data = await getMovieDetailsApi(movieId);
-      console.log('Movie details:', data);
       setMovie(data);
     } catch (error) {
       console.log('Error fetching movie details:', error);
@@ -86,7 +84,7 @@ const MovieDetails = () => {
               <h3>Additional Information</h3>
             </div>
           </div>
-
+          <h2>Additional information</h2>
           <ul className={styles.list}>
             <li className={styles.item}>
               <Link to={`/movies/${movieId}/cast`} onClick={getCast}>
