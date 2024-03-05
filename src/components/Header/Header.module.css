@@ -1,0 +1,30 @@
+.navbar {
+  background-color: rgb(201, 233, 244);
+  padding: 10px 20px;
+}
+
+.list {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+.item {
+  display: inline;
+  margin-right: 20px;
+}
+
+.item:last-child {
+  margin-right: 0;
+}
+
+.link {
+  color: black;
+  text-decoration: none;
+  font-size: 24px;
+}
+
+.active {
+  color: red;
+  font-weight: bold;
+}

@@ -1,0 +1,25 @@
+.list {
+  list-style-type: none;
+  margin: 0;
+  padding: 0 20px;
+}
+
+.heading {
+  font-size: 24px;
+  color: #333;
+  padding: 10px 20px;
+}
+
+.item {
+  margin-bottom: 10px;
+}
+
+.item a {
+  text-decoration: none;
+  color: #3a6594;
+  font-weight: bold;
+}
+
+.item a:hover {
+  text-decoration: underline;
+}

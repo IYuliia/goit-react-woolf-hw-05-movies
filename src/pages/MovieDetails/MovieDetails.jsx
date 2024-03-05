@@ -7,6 +7,7 @@ import {
   getMovieDetailsApi,
   getReviewsApi,
 } from '../../api/movies';
+import styles from './MovieDetails.module.css';
 
 const MovieDetails = () => {
   const { movieId } = useParams();
@@ -60,30 +61,39 @@ const MovieDetails = () => {
   };
 
   return (
-    <div>
+    <div className={styles.container}>
       {/* //   <Link to="/">Go Back</Link> */}
-      <button onClick={handleGoBack}>Go Back</button>
+      <button onClick={handleGoBack} className={styles.button}>
+        Go Back
+      </button>
       {isLoading && <p>Loading...</p>}
       {error && <p>{error}</p>}
       {movie && (
         <div>
-          <img
-            src={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`}
-            alt={movie.title}
-          />
-          <h2>{movie.title}</h2>
-          <p>Year: {movie.release_date}</p>
-          <p>User Score: {movie.vote_average}</p>
-          <p>Overview: {movie.overview}</p>
-          <p>Genres: {movie.genres.map(genre => genre.name).join(', ')}</p>
-          <h3>Additional Information</h3>
-          <ul>
-            <li>
+          <div className={styles.details}>
+            <div className={styles.poster}>
+              <img
+                src={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`}
+                alt={movie.title}
+              />
+            </div>
+            <div className={styles.info}>
+              <h2>{movie.title}</h2>
+              <p>Year: {movie.release_date}</p>
+              <p>User Score: {movie.vote_average}</p>
+              <p>Overview: {movie.overview}</p>
+              <p>Genres: {movie.genres.map(genre => genre.name).join(', ')}</p>
+              <h3>Additional Information</h3>
+            </div>
+          </div>
+
+          <ul className={styles.list}>
+            <li className={styles.item}>
               <Link to={`/movies/${movieId}/cast`} onClick={getCast}>
                 Cast
               </Link>
             </li>
-            <li>
+            <li className={styles.item}>
               <Link
                 to={`/movies/${movieId}/reviews`}
                 onClick={() => {
