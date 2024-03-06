@@ -1,2 +1,0 @@
-"use strict";(self.webpackChunkgoit_react_woolf_hw_05_movies=self.webpackChunkgoit_react_woolf_hw_05_movies||[]).push([[115],{115:function(e,t,r){r.r(t);var a=r(184);t.default=function(e){var t=e.cast;return(0,a.jsx)("div",{children:t.map((function(e){return(0,a.jsxs)("div",{children:[(0,a.jsx)("img",{src:"https://image.tmdb.org/t/p/w200/".concat(e.profile_path),alt:e.name}),(0,a.jsxs)("p",{children:["Name: ",e.name]}),(0,a.jsxs)("p",{children:["Character: ",e.character]})]},e.id)}))})}}}]);
-//# sourceMappingURL=115.6b7d473d.chunk.js.map
