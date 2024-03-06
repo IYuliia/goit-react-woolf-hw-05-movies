@@ -10,13 +10,8 @@ const Movies = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const [searched, setSearched] = useState(false);
-  const [searchParams, setSearchParams] = useSearchParams();
-  const searchQuery = searchParams.get('query') || '';
-
-  useEffect(() => {
-    setQuery(searchQuery);
-    console.log('SQ', searchQuery);
-  }, [searchQuery]);
+  const [, setSearchParams] = useSearchParams();
+  // const searchQuery = searchParams.get('query') || '';
 
   useEffect(() => {
     const getMovies = async () => {
