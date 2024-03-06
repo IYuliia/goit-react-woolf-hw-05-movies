@@ -1,5 +1,5 @@
+import MovieList from 'components/MovieList/MovieList.jsx';
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
 import { getTrendingMoviesApi } from '../../api/movies.js';
 import styles from './Home.module.css';
 
@@ -32,13 +32,7 @@ const Home = () => {
       {movies && (
         <div>
           <h3 className={styles.heading}>Trending Today</h3>
-          <ul className={styles.list}>
-            {movies.map(movie => (
-              <li className={styles.item} key={movie.id}>
-                <Link to={`/movies/${movie.id}`}>{movie.title}</Link>
-              </li>
-            ))}
-          </ul>
+          <MovieList movies={movies} />
         </div>
       )}
     </div>

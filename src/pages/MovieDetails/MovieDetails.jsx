@@ -1,12 +1,12 @@
-import Cast from 'pages/Cast/Cast';
-import Reviews from 'pages/Reviews/Reviews';
 import React, { useCallback, useEffect, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
 import {
-  getCastApi,
-  getMovieDetailsApi,
-  getReviewsApi,
-} from '../../api/movies';
+  Link,
+  Outlet,
+  useLocation,
+  useNavigate,
+  useParams,
+} from 'react-router-dom';
+import { getMovieDetailsApi } from '../../api/movies';
 import styles from './MovieDetails.module.css';
 
 const MovieDetails = () => {
@@ -14,9 +14,11 @@ const MovieDetails = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const [movie, setMovie] = useState(null);
-  const [cast, setCast] = useState([]);
-  const [reviews, setReviews] = useState([]);
-  const [showReviews, setShowReviews] = useState(false);
+  const location = useLocation();
+  const navigate = useNavigate();
+  const previousQuery = location.state?.query || '/';
+
+  console.log('Location State:', location.state);
 
   const getMovieDetails = useCallback(async () => {
     try {
@@ -32,35 +34,17 @@ const MovieDetails = () => {
     }
   }, [movieId]);
 
-  const getCast = useCallback(async () => {
-    try {
-      const castData = await getCastApi(movieId);
-      setCast(castData.cast);
-    } catch (error) {
-      console.error('Error fetching cast:', error);
-    }
-  }, [movieId]);
-
-  const getReviews = useCallback(async () => {
-    try {
-      const reviewsData = await getReviewsApi(movieId);
-      setReviews(reviewsData.results);
-    } catch (error) {
-      console.error('Error fetching reviews:', error);
-    }
-  }, [movieId]);
-
   useEffect(() => {
     getMovieDetails();
   }, [getMovieDetails]);
 
   const handleGoBack = () => {
-    window.history.back();
+    console.log('Previous Query:', previousQuery);
+    navigate(previousQuery);
   };
 
   return (
     <div className={styles.container}>
-      {/* //   <Link to="/">Go Back</Link> */}
       <button onClick={handleGoBack} className={styles.button}>
         Go Back
       </button>
@@ -87,27 +71,13 @@ const MovieDetails = () => {
           <h2>Additional information</h2>
           <ul className={styles.list}>
             <li className={styles.item}>
-              <Link to={`/movies/${movieId}/cast`} onClick={getCast}>
-                Cast
-              </Link>
+              <Link to={`/movies/${movieId}/cast`}>Cast</Link>
             </li>
             <li className={styles.item}>
-              <Link
-                to={`/movies/${movieId}/reviews`}
-                onClick={() => {
-                  getReviews();
-                  setShowReviews(true);
-                }}
-              >
-                Reviews
-              </Link>
+              <Link to={`/movies/${movieId}/reviews`}>Reviews</Link>
             </li>
           </ul>
-          {cast && <Cast cast={cast} />}
-          {showReviews && reviews.length > 0 && <Reviews reviews={reviews} />}
-          {showReviews && reviews.length === 0 && (
-            <p>We don't have any reviews for this movie.</p>
-          )}
+          <Outlet />
         </div>
       )}
     </div>

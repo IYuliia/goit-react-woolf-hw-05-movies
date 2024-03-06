@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import MovieList from 'components/MovieList/MovieList';
+import React, { useEffect, useState } from 'react';
 import { searchMoviesApi } from '../../api/movies';
 import styles from './Movies.module.css';
 
@@ -10,27 +10,34 @@ const Movies = () => {
   const [error, setError] = useState('');
   const [searched, setSearched] = useState(false);
 
-  const handleSearch = async () => {
-    if (!query) return;
+  useEffect(() => {
+    const getMovies = async () => {
+      if (!query) return;
 
-    setIsLoading(true);
-    setError('');
+      setIsLoading(true);
+      setError('');
+
+      try {
+        const data = await searchMoviesApi(query);
+        setMovies(data.results);
+      } catch (error) {
+        console.log('Error searching movies:', error);
+        setError('Error searching movies');
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    getMovies();
+  }, [query]);
+
+  const handleSearchSubmit = e => {
+    e.preventDefault();
     setSearched(true);
-
-    try {
-      const data = await searchMoviesApi(query);
-      setMovies(data.results);
-    } catch (error) {
-      console.log('Error searching movies:', error);
-      setError('Error searching movies');
-    } finally {
-      setIsLoading(false);
-    }
   };
 
   return (
     <div className={styles.container}>
-      <div className={styles.search}>
+      <form className={styles.search} onSubmit={handleSearchSubmit}>
         <input
           type="text"
           value={query}
@@ -38,23 +45,13 @@ const Movies = () => {
           placeholder="Enter movie name..."
           className={styles.input}
         />
-        <button onClick={handleSearch} className={styles.button}>
+        <button type="submit" className={styles.button}>
           Search
         </button>
-      </div>
+      </form>
       {isLoading && <p>Loading...</p>}
       {error && <p>{error}</p>}
-      {movies.length > 0 && (
-        <ul className={styles.movieList}>
-          {movies.map(movie => (
-            <li key={movie.id} className={styles.movieItem}>
-              <Link to={`/movies/${movie.id}`} className={styles.movieLink}>
-                {movie.title}
-              </Link>
-            </li>
-          ))}
-        </ul>
-      )}
+      {movies.length > 0 && <MovieList movies={movies} query={query} />}
       {searched && movies.length === 0 && !isLoading && <p>No movies found.</p>}
     </div>
   );
