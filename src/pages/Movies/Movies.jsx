@@ -1,5 +1,6 @@
 import MovieList from 'components/MovieList/MovieList';
 import React, { useEffect, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { searchMoviesApi } from '../../api/movies';
 import styles from './Movies.module.css';
 
@@ -9,6 +10,13 @@ const Movies = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const [searched, setSearched] = useState(false);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const searchQuery = searchParams.get('query') || '';
+
+  useEffect(() => {
+    setQuery(searchQuery);
+    console.log('SQ', searchQuery);
+  }, [searchQuery]);
 
   useEffect(() => {
     const getMovies = async () => {
@@ -27,12 +35,15 @@ const Movies = () => {
         setIsLoading(false);
       }
     };
-    getMovies();
-  }, [query]);
+    if (searched) {
+      getMovies();
+    }
+  }, [query, searched]);
 
   const handleSearchSubmit = e => {
     e.preventDefault();
     setSearched(true);
+    setSearchParams({ query });
   };
 
   return (
@@ -51,7 +62,9 @@ const Movies = () => {
       </form>
       {isLoading && <p>Loading...</p>}
       {error && <p>{error}</p>}
-      {movies.length > 0 && <MovieList movies={movies} query={query} />}
+      {searched && movies.length > 0 && (
+        <MovieList movies={movies} query={query} />
+      )}
       {searched && movies.length === 0 && !isLoading && <p>No movies found.</p>}
     </div>
   );

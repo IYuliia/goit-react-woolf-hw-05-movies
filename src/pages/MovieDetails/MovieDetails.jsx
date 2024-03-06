@@ -2,9 +2,9 @@ import React, { useCallback, useEffect, useState } from 'react';
 import {
   Link,
   Outlet,
-  useLocation,
   useNavigate,
   useParams,
+  useSearchParams,
 } from 'react-router-dom';
 import { getMovieDetailsApi } from '../../api/movies';
 import styles from './MovieDetails.module.css';
@@ -14,11 +14,10 @@ const MovieDetails = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const [movie, setMovie] = useState(null);
-  const location = useLocation();
   const navigate = useNavigate();
-  const previousQuery = location.state?.query || '/';
-
-  console.log('Location State:', location.state);
+  const [searchParams] = useSearchParams();
+  const previousQuery = searchParams.get('query') || '/';
+  console.log('SP', searchParams);
 
   const getMovieDetails = useCallback(async () => {
     try {
@@ -39,7 +38,7 @@ const MovieDetails = () => {
   }, [getMovieDetails]);
 
   const handleGoBack = () => {
-    console.log('Previous Query:', previousQuery);
+    console.log(previousQuery);
     navigate(previousQuery);
   };
 
