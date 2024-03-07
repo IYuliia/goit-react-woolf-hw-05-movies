@@ -29,7 +29,7 @@ const Cast = () => {
     <div>
       {isLoading && <p>Loading cast...</p>}
       {error && <p>{error}</p>}
-      {cast && (
+      {cast.length > 0 && (
         <div>
           <h2>Cast</h2>
           <ul>
@@ -39,7 +39,7 @@ const Cast = () => {
                   src={
                     actor.profile_path
                       ? `https://image.tmdb.org/t/p/w200/${actor.profile_path}`
-                      : ''
+                      : 'data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=='
                   }
                   alt={actor.name}
                 />
