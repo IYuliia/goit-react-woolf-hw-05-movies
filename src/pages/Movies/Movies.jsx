@@ -1,3 +1,4 @@
+import Form from 'components/Form/Form';
 import MovieList from 'components/MovieList/MovieList';
 import React, { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
@@ -5,23 +6,21 @@ import { searchMoviesApi } from '../../api/movies';
 import styles from './Movies.module.css';
 
 const Movies = () => {
-  const [query, setQuery] = useState('');
   const [movies, setMovies] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
-  const [searched, setSearched] = useState(false);
-  const [, setSearchParams] = useSearchParams();
-  // const searchQuery = searchParams.get('query') || '';
+  const [searchParams, setSearchParams] = useSearchParams();
+  const searchQuery = searchParams.get('query') || '';
 
   useEffect(() => {
     const getMovies = async () => {
-      if (!query) return;
+      if (!searchParams) return;
 
       setIsLoading(true);
       setError('');
 
       try {
-        const data = await searchMoviesApi(query);
+        const data = await searchMoviesApi(searchQuery);
         setMovies(data.results);
       } catch (error) {
         console.log('Error searching movies:', error);
@@ -30,37 +29,21 @@ const Movies = () => {
         setIsLoading(false);
       }
     };
-    if (searched) {
-      getMovies();
-    }
-  }, [query, searched]);
 
-  const handleSearchSubmit = e => {
-    e.preventDefault();
-    setSearched(true);
-    setSearchParams({ query });
+    getMovies();
+  }, [searchParams, searchQuery]);
+
+  const handleSearchSubmit = inputValue => {
+    setSearchParams({ query: inputValue });
   };
 
   return (
     <div className={styles.container}>
-      <form className={styles.search} onSubmit={handleSearchSubmit}>
-        <input
-          type="text"
-          value={query}
-          onChange={e => setQuery(e.target.value)}
-          placeholder="Enter movie name..."
-          className={styles.input}
-        />
-        <button type="submit" className={styles.button}>
-          Search
-        </button>
-      </form>
+      <Form onSubmit={handleSearchSubmit} />
       {isLoading && <p>Loading...</p>}
       {error && <p>{error}</p>}
-      {searched && movies.length > 0 && (
-        <MovieList movies={movies} query={query} />
-      )}
-      {searched && movies.length === 0 && !isLoading && <p>No movies found.</p>}
+      {movies.length > 0 && <MovieList movies={movies} query={searchQuery} />}
+      {movies.length === 0 && !isLoading && <p>No movies found.</p>}
     </div>
   );
 };

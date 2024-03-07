@@ -1,5 +1,11 @@
-import React, { useCallback, useEffect, useState } from 'react';
-import { Link, Outlet, useNavigate, useParams } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import {
+  Link,
+  Outlet,
+  useLocation,
+  useNavigate,
+  useParams,
+} from 'react-router-dom';
 import { getMovieDetailsApi } from '../../api/movies';
 import styles from './MovieDetails.module.css';
 
@@ -9,27 +15,28 @@ const MovieDetails = () => {
   const [error, setError] = useState('');
   const [movie, setMovie] = useState(null);
   const navigate = useNavigate();
-
-  const getMovieDetails = useCallback(async () => {
-    try {
-      setIsLoading(true);
-      setError('');
-      const data = await getMovieDetailsApi(movieId);
-      setMovie(data);
-    } catch (error) {
-      console.log('Error fetching movie details:', error);
-      setError('Error fetching movie details');
-    } finally {
-      setIsLoading(false);
-    }
-  }, [movieId]);
+  const location = useLocation();
 
   useEffect(() => {
+    const getMovieDetails = async () => {
+      try {
+        setIsLoading(true);
+        setError('');
+        const data = await getMovieDetailsApi(movieId);
+        setMovie(data);
+      } catch (error) {
+        console.log('Error fetching movie details:', error);
+        setError('Error fetching movie details');
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
     getMovieDetails();
-  }, [getMovieDetails]);
+  }, [movieId]);
 
   const handleGoBack = () => {
-    navigate(-1);
+    navigate(location.state?.from || '/');
   };
 
   return (
