@@ -43,7 +43,9 @@ const Movies = () => {
       {isLoading && <p>Loading...</p>}
       {error && <p>{error}</p>}
       {movies.length > 0 && <MovieList movies={movies} query={searchQuery} />}
-      {movies.length === 0 && !isLoading && <p>No movies found.</p>}
+      {movies.length === 0 && !isLoading && searchQuery && (
+        <p>No movies found.</p>
+      )}
     </div>
   );
 };

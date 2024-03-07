@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   Link,
   Outlet,
@@ -16,6 +16,11 @@ const MovieDetails = () => {
   const [movie, setMovie] = useState(null);
   const navigate = useNavigate();
   const location = useLocation();
+
+  const goBack = useRef(location.state?.from || '/');
+  const handleGoBack = () => {
+    navigate(goBack.current);
+  };
 
   useEffect(() => {
     const getMovieDetails = async () => {
@@ -35,9 +40,9 @@ const MovieDetails = () => {
     getMovieDetails();
   }, [movieId]);
 
-  const handleGoBack = () => {
-    navigate(location.state?.from || '/');
-  };
+  // const handleGoBack = () => {
+  //   navigate(location.state?.from || '/');
+  // };
 
   return (
     <div className={styles.container}>
